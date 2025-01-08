@@ -15,7 +15,7 @@ const shopSchema = new mongoose.Schema({
     required: true,
   },
 
-  list: {
+  info: {
     type: {
       name: {
         type: String,

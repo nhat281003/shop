@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
     }
 
     if (name) {
-      filter["list.name"] = { $regex: name, $options: "i" };
+      filter["info.name"] = { $regex: name, $options: "i" };
     }
 
     const shops = await Shop.find(filter).populate("category.categoryId");
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
   console.log(req.body);
   const shop = new Shop({
     category: req.body.category,
-    list: req.body.list,
+    info: req.body.info,
   });
 
   try {
@@ -63,8 +63,8 @@ router.patch("/update/:id",getShop ,async (req, res) => {
     res.shop.category = req.body.category;
   }
 
-  if (req.body.list != null) {
-    res.shop.list = req.body.list;
+  if (req.body.info != null) {
+    res.shop.info = req.body.info;
   }
 
   try {
