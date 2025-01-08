@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const BaseResopnse = require("../base_reponse/response");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
   try {
@@ -13,22 +13,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
-  });
-  try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
 
-
-
+// register
 router.post("/register", async (req, res) => {
   const user = new User({
     username: req.body.username,
@@ -59,7 +45,7 @@ router.post("/register", async (req, res) => {
     return BaseResopnse.successResponse(res, 200, "Register Success", newUser);
   } catch (error) {
     console.log(error);
-    
+
     return BaseResopnse.errorResponse(
       res,
       500,
@@ -70,33 +56,29 @@ router.post("/register", async (req, res) => {
 });
 
 
-
-
+// login
 router.post("/login", async (req, res) => {
-
   const userLogin = new User({
     username: req.body.username,
     password: req.body.password,
-
   });
 
-
-
   try {
-    if(!userLogin.username || !userLogin.password) {
+    if (!userLogin.username || !userLogin.password) {
       return BaseResopnse.errorResponse(
         res,
         500,
         "Please provide both username and password.",
         res.errorResponse
       );
-  
     }
-    
-    const user = await User.findOne({username : userLogin.username, password : userLogin.password});
-  
-  
-    if(!user){
+
+    const user = await User.findOne({
+      username: userLogin.username,
+      password: userLogin.password,
+    });
+
+    if (!user) {
       return BaseResopnse.errorResponse(
         res,
         401,
@@ -105,28 +87,25 @@ router.post("/login", async (req, res) => {
       );
     }
 
-      // Tạo token
-      const token = jwt.sign(
-        { 
-          userId: user._id,
-          username: user.username
-        },
-        process.env.JWT_SECRET, // Thêm JWT_SECRET vào file .env
-        { expiresIn: '24h' } // Token hết hạn sau 24h
-      );
-  
-  
+    // Tạo token
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        username: user.username,
+      },
+      process.env.JWT_SECRET, // Thêm JWT_SECRET vào file .env
+      { expiresIn: "24h" } // Token hết hạn sau 24h
+    );
+
     return BaseResopnse.successResponse(res, 200, "Login Success", {
       token,
-      user
+      user,
     });
   } catch (error) {
     console.log(error);
-    
+
     return BaseResopnse.errorResponse(res, 500, "Login Error", error);
   }
-
-
-})
+});
 
 module.exports = router;
