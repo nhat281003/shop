@@ -9,7 +9,7 @@ const cartSchema = new mongoose.Schema({
   item: [
     {
       quantity: {
-        type: Number.parseInt,
+        type: Number,
         require: true,
         default: 0,
       },

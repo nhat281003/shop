@@ -35,6 +35,9 @@ const shopSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      stock : {
+        type : Number,
+      }
     },
     required: true,
     default: {},

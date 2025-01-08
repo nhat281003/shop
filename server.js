@@ -24,4 +24,9 @@ const categoryRouter = require("./routes/category");
 app.use("/category", categoryRouter);
 
 
+
+
+const cartRouter = require("./routes/cart");
+app.use("/cart", cartRouter);
+
 app.listen(3000, () => console.log("3000 listening..."));
