@@ -1,17 +1,9 @@
 const mongoose = require("mongoose");
 
 const shopSchema = new mongoose.Schema({
-  category: {
-    type: {
-      categoryId: {
-        type: String,
-        required: true,
-      },
-      categoryName: {
-        type: String,
-        required: true,
-      },
-    },
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId, // Sử dụng ObjectId để tham chiếu
+    ref: "Category", // Tên model của bảng Category
     required: true,
   },
 

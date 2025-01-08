@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Shop = require("../models/shop");
+const Category = require("../models/category");
 const BaseResopnse = require("../base_reponse/response");
 
 
@@ -12,14 +13,14 @@ router.get("/", async (req, res) => {
     const filter = {};
 
     if (categoryId) {
-      filter["category.categoryId"] = categoryId;
+      filter["categoryId"] = categoryId;
     }
 
     if (name) {
       filter["info.name"] = { $regex: name, $options: "i" };
     }
 
-    const shops = await Shop.find(filter).populate("category.categoryId");
+    const shops = await Shop.find(filter).populate("categoryId");
     res.status(200).json({
         success: true,
         data: shops,
@@ -37,9 +38,15 @@ router.get("/", async (req, res) => {
 
 // thêm sp
 router.post("/", async (req, res) => {
-  console.log(req.body);
+
+const category = await Category.findById(req.body.categoryId);
+
+if(!category) {
+  return BaseResopnse.errorResponse(res,400,"Invalid category");
+}
+
   const shop = new Shop({
-    category: req.body.category,
+    categoryId: req.body.categoryId,
     info: req.body.info,
   });
 
@@ -51,6 +58,8 @@ router.post("/", async (req, res) => {
         messages: "Product added successfully"
     });
   } catch (error) {
+    console.log(error);
+    
     res.status(400).json({ message: error.message ?? "" });
   }
 });
@@ -59,8 +68,8 @@ router.post("/", async (req, res) => {
 //update sp
 router.patch("/update/:id",getShop ,async (req, res) => {
 
-  if (req.body.category != null) {
-    res.shop.category = req.body.category;
+  if (req.body.categoryId != null) {
+    res.shop.categoryId = req.body.categoryId;
   }
 
   if (req.body.info != null) {
