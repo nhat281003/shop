@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const shopSchema = new mongoose.Schema({
-  categoryId: {
+  category: {
     type: mongoose.Schema.Types.ObjectId, // Sử dụng ObjectId để tham chiếu
     ref: "Category", // Tên model của bảng Category
     required: true,

@@ -7,23 +7,31 @@ const BaseResopnse = require("../base_reponse/response");
 
 // lấy danh sách sản phẩm
 router.get("/", async (req, res) => {
-  const { categoryId, name } = req.query;
+  const { categoryName, name } = req.query;
 
   try {
     const filter = {};
 
-    if (categoryId) {
-      filter["categoryId"] = categoryId;
-    }
+    // if (categoryId) {
+    //   filter["category"] = categoryId;
+    // }
 
     if (name) {
       filter["info.name"] = { $regex: name, $options: "i" };
     }
 
-    const shops = await Shop.find(filter).populate("categoryId");
+    const shops = await Shop.find(filter).populate({
+      path: "category",
+      match: categoryName ? { name: { $regex: categoryName, $options: "i" } } // Lọc theo categoryName
+      : {}, 
+    });
+
+    const filteredShops = shops.filter((shop) => shop.category !== null);
+
+
     res.status(200).json({
         success: true,
-        data: shops,
+        data: filteredShops,
         messages: "Product find success"
     });
   } catch (e) {
@@ -46,7 +54,7 @@ if(!category) {
 }
 
   const shop = new Shop({
-    categoryId: req.body.categoryId,
+    category: req.body.categoryId,
     info: req.body.info,
   });
 
@@ -69,7 +77,7 @@ if(!category) {
 router.patch("/update/:id",getShop ,async (req, res) => {
 
   if (req.body.categoryId != null) {
-    res.shop.categoryId = req.body.categoryId;
+    res.shop.category = req.body.categoryId;
   }
 
   if (req.body.info != null) {
