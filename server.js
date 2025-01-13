@@ -10,7 +10,7 @@ const PORT = 8080;
 
 // Lắng nghe trên 0.0.0.0 để cho phép mọi IP truy cập
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on http://192.168.1.240:${PORT}`);
+  console.log(`Server is running on http://192.168.137.126:${PORT}`);
 });
 
 mongoose.connect(process.env.MONGO_DB);
