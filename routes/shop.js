@@ -63,7 +63,7 @@ if(!category) {
     res.status(200).send({
         success: true,
         data: newProduct,
-        messages: "Product added successfully"
+        message: "Product added successfully"
     });
   } catch (error) {
     console.log(error);
